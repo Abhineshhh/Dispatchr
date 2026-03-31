@@ -1,4 +1,4 @@
-# Dispatchr 🚀
+# Dispatchr
 
 Dispatchr is a fast, concurrent email dispatcher built in Go. It demonstrates the power of Go's concurrency model by utilizing the **Worker Pool pattern** to process and send bulk emails efficiently.
 
@@ -19,7 +19,7 @@ Dispatchr is a fast, concurrent email dispatcher built in Go. It demonstrates th
 
 ### Prerequisites
 - [Go](https://golang.org/doc/install) installed (1.18+ recommended)
-- A local SMTP testing tool like [MailHog](https://github.com/mailhog/MailHog) running on `localhost:1025` (or update `smtpHost` and `smtpPort` in `consumer.go` to your preferred SMTP server).
+- [Docker](https://docs.docker.com/get-docker/) installed for running the local SMTP testing environment.
 
 ### Setup and Execution
 
@@ -28,7 +28,14 @@ Dispatchr is a fast, concurrent email dispatcher built in Go. It demonstrates th
    cd Dispatchr
    ```
 
-2. **Prepare your data**:
+2. **Start the Mailpit SMTP Server**:
+   Mailpit acts as a dummy SMTP server to catch outgoing emails so no real emails are accidentally sent during development.
+   ```bash
+   docker run -d --restart unless-stopped --name=mailpit -p 8025:8025 -p 1025:1025 axllent/mailpit
+   ```
+   *You can view the incoming emails in its web UI at [http://localhost:8025](http://localhost:8025).*
+
+3. **Prepare your data**:
    Ensure you have an `emails.csv` file in the root directory.
    ```csv
    Name,Email
@@ -36,7 +43,7 @@ Dispatchr is a fast, concurrent email dispatcher built in Go. It demonstrates th
    Jane Smith,jane@example.com
    ```
 
-3. **Prepare your template**:
+4. **Prepare your template**:
    Ensure you have an `email.tmpl` file with your email structure.
    ```html
    To: {{.Email}}
@@ -45,7 +52,7 @@ Dispatchr is a fast, concurrent email dispatcher built in Go. It demonstrates th
    Welcome to Dispatchr, {{.Name}}!
    ```
 
-4. **Run the application**:
+5. **Run the application**:
    ```bash
    go run .
    ```
