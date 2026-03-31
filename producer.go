@@ -22,11 +22,14 @@ func loadRecipient(filePath string, ch chan Recipient) error {
 		return err
 	}
 
-	for _, records := range records[1:] {
+	for _, record := range records[1:] {
+		if len(record) < 2 {
+			continue // skip invalid rows
+		}
 
 		ch <- Recipient{
-			Name:  records[0],
-			Email: records[1],
+			Name:  record[0],
+			Email: record[1],
 		}
 		// send -> consumer -> channels
 	}
